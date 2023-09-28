@@ -111,7 +111,7 @@ func healthCheck() {
 var cfg Config
 
 // Serve serves a loadbalancer.
-func Serve() {
+func main() {
 	data, err := ioutil.ReadFile("./config.json")
 	if err != nil {
 		log.Fatal(err.Error())
