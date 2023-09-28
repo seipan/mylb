@@ -19,7 +19,7 @@ WORKDIR /
 
 COPY --from=build /docker-gs-ping /docker-gs-ping
 
-EXPOSE 8080
+EXPOSE 8081
 
 USER nonroot:nonroot
 
