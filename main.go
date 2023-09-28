@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net"
@@ -77,7 +78,7 @@ func lbHandler(w http.ResponseWriter, r *http.Request) {
 func isAlive(url *url.URL) bool {
 	conn, err := net.DialTimeout("tcp", url.Host, time.Minute*1)
 	if err != nil {
-		log.Printf("Unreachable to %v, error:", url.Host, err.Error())
+		log.Println(fmt.Sprintf("Unreachable to %v, error %v:", url.Host, err))
 		return false
 	}
 	defer conn.Close()
