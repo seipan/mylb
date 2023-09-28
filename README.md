@@ -1,4 +1,4 @@
-# go-loadbalancer
+# mylb
 Goでロードバランサーを実装するんだ！
 
 ## Reference
