@@ -10,7 +10,7 @@
 
 # mylb
 
- :punch: Implementing a Load Balancer in Golang(just a toy)  :punch:
+⭐ Implementing a Load Balancer in Golang(just a toy)  ⭐
 
 <br>
 <br>
