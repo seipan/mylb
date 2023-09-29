@@ -16,7 +16,7 @@ jobs:
     - name: set up testserver
       run: |
         cd testserver
-        make up
+        make re
 
     - name: Check the 8081
       uses: jtalk/url-health-check-action@v3
