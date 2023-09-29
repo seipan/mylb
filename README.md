@@ -18,6 +18,26 @@
 
 </div>
 
+## Usage
+### testserver
+You can launch servers for load balancer testing. There are a total of four servers.
+```
+cd testserver
+make up
+```
+If you want to restart the server, use the following command.
+```
+cd testserver
+make re
+```
+The four servers to be launched are as follows.
+```
+http://localhost:8081
+http://localhost:8082
+http://localhost:8083
+http://localhost:8084
+```
+If you access these endpoints, you will be redirected to /health.
 
 ## Reference
  [Golangでロードバランサーを実装する](https://bmf-tech.com/posts/Golang%E3%81%A7%E3%83%AD%E3%83%BC%E3%83%89%E3%83%90%E3%83%A9%E3%83%B3%E3%82%B5%E3%83%BC%E3%82%92%E5%AE%9F%E8%A3%85%E3%81%99%E3%82%8B)
