@@ -12,5 +12,5 @@ func main() {
 	router.GET("/", func(c *gin.Context) {
 		c.Redirect(302, "/health")
 	})
-	router.Run(":8084")
+	router.Run(":8085")
 }

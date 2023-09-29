@@ -29,9 +29,9 @@ services:
 
   serverfour:
       build:
-        context: ../localhost/8084
+        context: ../localhost/8085
         dockerfile: Dockerfile
       ports:
-        - 8084:8084
+        - 8085:8085
       volumes:
-      - ../../:/go/src/github.com/seipan/mylb/testserver/localhost/8083
+      - ../../:/go/src/github.com/seipan/mylb/testserver/localhost/8085
