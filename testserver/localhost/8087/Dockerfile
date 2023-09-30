@@ -1,7 +1,7 @@
 ## Build
 FROM golang:1.20-buster AS build
 
-WORKDIR /go/src/github.com/seipan/mylb/testserver/localhost/8085
+WORKDIR /go/src/github.com/seipan/mylb/testserver/localhost/8087
 
 COPY go.mod ./
 COPY go.sum ./
@@ -19,7 +19,7 @@ WORKDIR /
 
 COPY --from=build /docker-gs-ping /docker-gs-ping
 
-EXPOSE 8085
+EXPOSE 8087
 
 USER nonroot:nonroot
 

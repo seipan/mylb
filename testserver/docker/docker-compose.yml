@@ -27,7 +27,7 @@ services:
       volumes:
       - ../../:/go/src/github.com/seipan/mylb/testserver/localhost/8083
 
-  serverfour:
+  serverfive:
       build:
         context: ../localhost/8085
         dockerfile: Dockerfile
@@ -35,3 +35,39 @@ services:
         - 8085:8085
       volumes:
       - ../../:/go/src/github.com/seipan/mylb/testserver/localhost/8085
+  
+  serversix:
+      build:
+        context: ../localhost/8086
+        dockerfile: Dockerfile
+      ports:
+        - 8086:8086
+      volumes:
+      - ../../:/go/src/github.com/seipan/mylb/testserver/localhost/8086
+
+  serverseven:
+      build:
+        context: ../localhost/8087
+        dockerfile: Dockerfile
+      ports:
+        - 8087:8087
+      volumes:
+      - ../../:/go/src/github.com/seipan/mylb/testserver/localhost/8087
+
+  servereight:
+      build:
+        context: ../localhost/8088
+        dockerfile: Dockerfile
+      ports:
+        - 8088:8088
+      volumes:
+      - ../../:/go/src/github.com/seipan/mylb/testserver/localhost/8088
+
+  servernine:
+      build:
+        context: ../localhost/8089
+        dockerfile: Dockerfile
+      ports:
+        - 8089:8089
+      volumes:
+      - ../../:/go/src/github.com/seipan/mylb/testserver/localhost/8089
