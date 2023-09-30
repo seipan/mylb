@@ -2,13 +2,12 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"os"
 	"sync"
 	"time"
 )
@@ -30,6 +29,8 @@ type Backend struct {
 	IsDead bool
 	mu     sync.RWMutex
 }
+
+var cfg Config
 
 // SetDead updates the value of IsDead in Backend.
 func (backend *Backend) SetDead(b bool) {
@@ -78,7 +79,7 @@ func lbHandler(w http.ResponseWriter, r *http.Request) {
 func isAlive(url *url.URL) bool {
 	conn, err := net.DialTimeout("tcp", url.Host, time.Minute*1)
 	if err != nil {
-		log.Println(fmt.Sprintf("Unreachable to %v, error %v:", url.Host, err))
+		log.Printf("Unreachable to %v, error %v:", url.Host, err)
 		return false
 	}
 	defer conn.Close()
@@ -109,11 +110,9 @@ func healthCheck() {
 
 }
 
-var cfg Config
-
 // Serve serves a loadbalancer.
 func main() {
-	data, err := ioutil.ReadFile("./config.json")
+	data, err := os.ReadFile("./config.json")
 	if err != nil {
 		log.Fatal(err.Error())
 	}
