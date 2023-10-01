@@ -25,9 +25,10 @@ type Proxy struct {
 
 // Backend is servers which load balancer is transferred.
 type Backend struct {
-	URL    string `json:"url"`
-	IsDead bool
-	mu     sync.RWMutex
+	URL         string `json:"url"`
+	IsDead      bool
+	mu          sync.RWMutex
+	connections int
 }
 
 var cfg Config
@@ -45,6 +46,10 @@ func (backend *Backend) GetIsDead() bool {
 	isAlive := backend.IsDead
 	backend.mu.RUnlock()
 	return isAlive
+}
+
+func (backend *Backend) GetConnections() int {
+	return backend.connections
 }
 
 var mu sync.Mutex
