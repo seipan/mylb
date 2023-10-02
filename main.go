@@ -1,57 +1,25 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"log"
-	"net"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
 	"os"
 	"sync"
-	"time"
+
+	"github.com/seipan/mylb/backend"
+	"github.com/seipan/mylb/proxy"
 )
 
-// Config is a configuration.
 type Config struct {
-	Proxy    Proxy     `json:"proxy"`
-	Backends []Backend `json:"backends"`
-}
-
-// Proxy is a reverse proxy, and means load balancer.
-type Proxy struct {
-	Port string `json:"port"`
-}
-
-// Backend is servers which load balancer is transferred.
-type Backend struct {
-	URL         string `json:"url"`
-	IsDead      bool
-	mu          sync.RWMutex
-	connections int
+	Proxy    proxy.Proxy       `json:"proxy"`
+	Backends []backend.Backend `json:"backends"`
 }
 
 var cfg Config
-
-// SetDead updates the value of IsDead in Backend.
-func (backend *Backend) SetDead(b bool) {
-	backend.mu.Lock()
-	backend.IsDead = b
-	backend.mu.Unlock()
-}
-
-// GetIsDead returns the value of IsDead in Backend.
-func (backend *Backend) GetIsDead() bool {
-	backend.mu.RLock()
-	isAlive := backend.IsDead
-	backend.mu.RUnlock()
-	return isAlive
-}
-
-func (backend *Backend) GetConnections() int {
-	return backend.connections
-}
-
 var mu sync.Mutex
 var idx int = 0
 
@@ -80,41 +48,6 @@ func lbHandler(w http.ResponseWriter, r *http.Request) {
 	reverseProxy.ServeHTTP(w, r)
 }
 
-// pingBackend checks if the backend is alive.
-func isAlive(url *url.URL) bool {
-	conn, err := net.DialTimeout("tcp", url.Host, time.Minute*1)
-	if err != nil {
-		log.Printf("Unreachable to %v, error %v:", url.Host, err)
-		return false
-	}
-	defer conn.Close()
-	return true
-}
-
-// healthCheck is a function for healthcheck
-func healthCheck() {
-	t := time.NewTicker(time.Minute * 1)
-	for {
-		select {
-		case <-t.C:
-			for _, backend := range cfg.Backends {
-				pingURL, err := url.Parse(backend.URL)
-				if err != nil {
-					log.Fatal(err.Error())
-				}
-				isAlive := isAlive(pingURL)
-				backend.SetDead(!isAlive)
-				msg := "ok"
-				if !isAlive {
-					msg = "dead"
-				}
-				log.Printf("%v checked %v by healthcheck", backend.URL, msg)
-			}
-		}
-	}
-
-}
-
 // Serve serves a loadbalancer.
 func main() {
 	data, err := os.ReadFile("./config.json")
@@ -123,7 +56,7 @@ func main() {
 	}
 	json.Unmarshal(data, &cfg)
 
-	go healthCheck()
+	go healthCheck(context.Background(), nil)
 
 	s := http.Server{
 		Addr:    ":" + cfg.Proxy.Port,
