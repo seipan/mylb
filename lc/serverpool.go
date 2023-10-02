@@ -1,13 +1,14 @@
 package lc
 
 import (
+	"sync"
+
 	"github.com/seipan/mylb/backend"
-	"github.com/seipan/mylb/proxy"
 )
 
 type lcserverPool struct {
-	Proxy    proxy.Proxy       `json:"proxy"`
 	Backends []backend.Backend `json:"backends"`
+	mu       sync.RWMutex
 }
 
 func (s *lcserverPool) GetNextValidPeer() backend.Backend {
@@ -28,4 +29,10 @@ func (s *lcserverPool) GetNextValidPeer() backend.Backend {
 		}
 	}
 	return leastConnectedPeer
+}
+
+func NewlcserverPool(backends []backend.Backend) lcserverPool {
+	return lcserverPool{
+		Backends: backends,
+	}
 }
