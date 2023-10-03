@@ -49,4 +49,4 @@ If you access these endpoints, you will be redirected to /health.
 
  ## License
 Code licensed under 
-[the MIT License](https://github.com/seipan/bulma/blob/main/LICENSE).
+[the MIT License](https://github.com/seipan/mylb/blob/main/LICENSE).
