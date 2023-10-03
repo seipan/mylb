@@ -2,6 +2,7 @@ package backend
 
 import (
 	"net/http"
+	"net/http/httputil"
 	"sync"
 )
 
@@ -14,10 +15,11 @@ type Backend interface {
 }
 
 type backend struct {
-	URL         string `json:"url"`
-	IsDead      bool
-	mu          sync.RWMutex
-	connections int
+	URL          string `json:"url"`
+	IsDead       bool
+	mu           sync.RWMutex
+	connections  int
+	reverseProxy *httputil.ReverseProxy
 }
 
 func (backend *backend) SetDead(b bool) {
@@ -41,10 +43,24 @@ func (backend *backend) GetURL() string {
 	return backend.URL
 }
 
-func NewBackend(url string) backend {
+func (b *backend) Serve(rw http.ResponseWriter, req *http.Request) {
+	defer func() {
+		b.mu.Lock()
+		b.connections--
+		b.mu.Unlock()
+	}()
+
+	b.mu.Lock()
+	b.connections++
+	b.mu.Unlock()
+	b.reverseProxy.ServeHTTP(rw, req)
+}
+
+func NewBackend(url string, rp *httputil.ReverseProxy) backend {
 	return backend{
-		URL:    url,
-		IsDead: false,
+		URL:          url,
+		IsDead:       false,
+		reverseProxy: rp,
 	}
 }
 
