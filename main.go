@@ -4,8 +4,6 @@ import (
 	"context"
 	"log"
 	"net/http"
-
-	"github.com/seipan/mylb/lc"
 )
 
 // Serve serves a loadbalancer.
@@ -14,7 +12,7 @@ func main() {
 
 	s := http.Server{
 		Addr:    ":" + "8080",
-		Handler: http.HandlerFunc(lc.LcHandler),
+		Handler: http.HandlerFunc(nil),
 	}
 	if err := s.ListenAndServe(); err != nil {
 		log.Fatal(err.Error())

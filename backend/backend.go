@@ -1,40 +1,55 @@
 package backend
 
-import "sync"
+import (
+	"net/http"
+	"sync"
+)
 
-type Backend struct {
+type Backend interface {
+	SetDead(bool)
+	GetIsDead() bool
+	GetConnections() int
+	GetURL() string
+	Serve(http.ResponseWriter, *http.Request)
+}
+
+type backend struct {
 	URL         string `json:"url"`
 	IsDead      bool
 	mu          sync.RWMutex
 	connections int
 }
 
-func (backend *Backend) SetDead(b bool) {
+func (backend *backend) SetDead(b bool) {
 	backend.mu.Lock()
 	backend.IsDead = b
 	backend.mu.Unlock()
 }
 
-func (backend *Backend) GetIsDead() bool {
+func (backend *backend) GetIsDead() bool {
 	backend.mu.RLock()
 	isAlive := backend.IsDead
 	backend.mu.RUnlock()
 	return isAlive
 }
 
-func (backend *Backend) GetConnections() int {
+func (backend *backend) GetConnections() int {
 	return backend.connections
 }
 
-func NewBackend(url string) Backend {
-	return Backend{
+func (backend *backend) GetURL() string {
+	return backend.URL
+}
+
+func NewBackend(url string) backend {
+	return backend{
 		URL:    url,
 		IsDead: false,
 	}
 }
 
-func NewDefaultBackend() []Backend {
-	return []Backend{
+func NewDefaultBackend() []backend {
+	return []backend{
 		{
 			URL:    "http://localhost:8081/",
 			IsDead: false,

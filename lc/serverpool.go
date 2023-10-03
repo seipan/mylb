@@ -31,6 +31,20 @@ func (s *lcserverPool) GetNextValidPeer() backend.Backend {
 	return leastConnectedPeer
 }
 
+func (s *lcserverPool) GetBackends() []backend.Backend {
+	return s.Backends
+}
+
+func (s *lcserverPool) AddBackend(b backend.Backend) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.Backends = append(s.Backends, b)
+}
+
+func (s *lcserverPool) GetServerPoolSize() int {
+	return len(s.Backends)
+}
+
 func NewlcserverPool(backends []backend.Backend) lcserverPool {
 	return lcserverPool{
 		Backends: backends,

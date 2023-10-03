@@ -26,7 +26,7 @@ func healthCheck(ctx context.Context, sv ServerPool) {
 			bcd := sv.GetBackends()
 			for _, b := range bcd {
 				b := b
-				pingURL, err := url.Parse(b.URL)
+				pingURL, err := url.Parse(b.GetURL())
 				if err != nil {
 					log.Fatal(err.Error())
 				}
@@ -36,7 +36,7 @@ func healthCheck(ctx context.Context, sv ServerPool) {
 				if !isAlive {
 					msg = "dead"
 				}
-				log.Printf("%v checked %v by healthcheck", b.URL, msg)
+				log.Printf("%v checked %v by healthcheck", b.GetURL(), msg)
 			}
 		case <-ctx.Done():
 			return
