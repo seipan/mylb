@@ -10,7 +10,9 @@ func main() {
 		})
 	})
 	router.GET("/", func(c *gin.Context) {
-		c.Redirect(302, "/health")
+		c.JSON(200, gin.H{
+			"message": "ok",
+		})
 	})
 	router.Run(":8081")
 }
