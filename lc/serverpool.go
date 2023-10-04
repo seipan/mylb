@@ -4,6 +4,7 @@ import (
 	"sync"
 
 	"github.com/seipan/mylb/backend"
+	"github.com/seipan/mylb/serverpool"
 )
 
 type lcserverPool struct {
@@ -45,8 +46,8 @@ func (s *lcserverPool) GetServerPoolSize() int {
 	return len(s.Backends)
 }
 
-func NewlcserverPool(backends []backend.Backend) lcserverPool {
-	return lcserverPool{
+func NewlcserverPool(backends []backend.Backend) serverpool.ServerPool {
+	return &lcserverPool{
 		Backends: backends,
 	}
 }

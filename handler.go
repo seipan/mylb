@@ -18,3 +18,7 @@ func (lb *lbHandler) Serve(w http.ResponseWriter, r *http.Request) {
 	}
 	http.Error(w, "Service not available", http.StatusServiceUnavailable)
 }
+
+func NewLBHandler(serverPool ServerPool) LBHandler {
+	return &lbHandler{serverPool}
+}
