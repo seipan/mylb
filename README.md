@@ -47,6 +47,14 @@ If you access these endpoints, you will be redirected to /health.
 ## Reference
  [Golangでロードバランサーを実装する](https://bmf-tech.com/posts/Golang%E3%81%A7%E3%83%AD%E3%83%BC%E3%83%89%E3%83%90%E3%83%A9%E3%83%B3%E3%82%B5%E3%83%BC%E3%82%92%E5%AE%9F%E8%A3%85%E3%81%99%E3%82%8B)
 
+  [Creating a Load Balancer in GO](https://medium.com/@leonardo5621_66451/building-a-load-balancer-in-go-1c68131dc0ef)
+
+ https://github.com/kasvith/simplelb
+
+ https://github.com/leonardo5621/golang-load-balancer
+
+
+
  ## License
 Code licensed under 
 [the MIT License](https://github.com/seipan/mylb/blob/main/LICENSE).
