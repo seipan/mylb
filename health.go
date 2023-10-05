@@ -6,6 +6,8 @@ import (
 	"net"
 	"net/url"
 	"time"
+
+	"github.com/seipan/mylb/serverpool"
 )
 
 func isAlive(ctx context.Context, url *url.URL) bool {
@@ -18,7 +20,7 @@ func isAlive(ctx context.Context, url *url.URL) bool {
 	return true
 }
 
-func healthCheck(ctx context.Context, sv ServerPool) {
+func healthCheck(ctx context.Context, sv serverpool.ServerPool) {
 	t := time.NewTicker(time.Minute * 1)
 	for {
 		select {

@@ -1,13 +1,17 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/seipan/mylb/serverpool"
+)
 
 type LBHandler interface {
 	Serve(http.ResponseWriter, *http.Request)
 }
 
 type lbHandler struct {
-	serverPool ServerPool
+	serverPool serverpool.ServerPool
 }
 
 func (lb *lbHandler) Serve(w http.ResponseWriter, r *http.Request) {
@@ -19,6 +23,6 @@ func (lb *lbHandler) Serve(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "Service not available", http.StatusServiceUnavailable)
 }
 
-func NewLBHandler(serverPool ServerPool) LBHandler {
+func NewLBHandler(serverPool serverpool.ServerPool) LBHandler {
 	return &lbHandler{serverPool}
 }
