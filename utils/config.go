@@ -2,7 +2,13 @@ package utils
 
 import (
 	"encoding/json"
+	"errors"
 	"os"
+
+	"github.com/seipan/mylb/backend"
+	"github.com/seipan/mylb/lc"
+	"github.com/seipan/mylb/lr"
+	"github.com/seipan/mylb/serverpool"
 )
 
 type Config struct {
@@ -18,4 +24,20 @@ func GetConfig() (Config, error) {
 	}
 	json.Unmarshal(data, &cfg)
 	return cfg, nil
+}
+
+func GetPoolType(backends []backend.Backend) (serverpool.ServerPool, error) {
+	cfg, err := GetConfig()
+	if err != nil {
+		return nil, err
+	}
+	switch cfg.Type {
+	case "lc":
+		return lc.NewlcserverPool(backends), nil
+	case "lr":
+		return lr.NewlrserverPool(backends), nil
+	default:
+		return nil, errors.New("invalid server pool type")
+	}
+
 }

@@ -34,11 +34,6 @@ func healthCheck(ctx context.Context, sv serverpool.ServerPool) {
 				}
 				isAlive := isAlive(ctx, pingURL)
 				b.SetDead(!isAlive)
-				msg := "ok"
-				if !isAlive {
-					msg = "dead"
-				}
-				log.Printf("%v checked %v by healthcheck", b.GetURL(), msg)
 			}
 		case <-ctx.Done():
 			return

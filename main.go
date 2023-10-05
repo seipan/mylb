@@ -7,7 +7,6 @@ import (
 	"net/url"
 
 	"github.com/seipan/mylb/backend"
-	"github.com/seipan/mylb/lc"
 	"github.com/seipan/mylb/utils"
 	"go.uber.org/zap"
 )
@@ -25,10 +24,17 @@ func main() {
 		}
 		b.SetReverProxy(httputil.NewSingleHostReverseProxy(url))
 	}
-	serverPool := lc.NewlcserverPool(backends)
-	lbHandler := NewLBHandler(serverPool)
+	serverPool, err := utils.GetPoolType(backends)
+	if err != nil {
+		utils.Error("get pool type err",
+			zap.String("error", err.Error()),
+		)
+	}
 
-	go healthCheck(context.Background(), nil)
+	go healthCheck(context.Background(), serverPool)
+	go benchCheck(context.Background(), serverPool)
+
+	lbHandler := NewLBHandler(serverPool)
 
 	s := http.Server{
 		Addr:    ":" + "8080",

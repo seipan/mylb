@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"sync"
+	"time"
 )
 
 type Backend interface {
@@ -13,6 +14,8 @@ type Backend interface {
 	GetURL() string
 	Serve(http.ResponseWriter, *http.Request)
 	SetReverProxy(*httputil.ReverseProxy)
+	GetResponseTime() time.Duration
+	SetResponseTime(time.Duration)
 }
 
 type backend struct {
@@ -20,6 +23,7 @@ type backend struct {
 	IsDead       bool
 	mu           sync.RWMutex
 	connections  int
+	responsetime time.Duration
 	reverseProxy *httputil.ReverseProxy
 }
 
@@ -48,6 +52,14 @@ func (backend *backend) SetReverProxy(rp *httputil.ReverseProxy) {
 	backend.reverseProxy = rp
 }
 
+func (b *backend) GetResponseTime() time.Duration {
+	return b.responsetime
+}
+
+func (b *backend) SetResponseTime(t time.Duration) {
+	b.responsetime = t
+}
+
 func (b *backend) Serve(rw http.ResponseWriter, req *http.Request) {
 	defer func() {
 		b.mu.Lock()
@@ -74,7 +86,6 @@ func NewDefaultBackend() []Backend {
 		NewBackend("http://localhost:8081/", nil),
 		NewBackend("http://localhost:8082/", nil),
 		NewBackend("http://localhost:8083/", nil),
-		NewBackend("http://localhost:8084/", nil),
 		NewBackend("http://localhost:8085/", nil),
 		NewBackend("http://localhost:8086/", nil),
 		NewBackend("http://localhost:8087/", nil),
@@ -82,36 +93,3 @@ func NewDefaultBackend() []Backend {
 		NewBackend("http://localhost:8089/", nil),
 	}
 }
-
-// func NewDefaultBackend() []Backend {
-// 	return []backend{
-// 		{
-// 			URL:    "http://localhost:8081/",
-// 			IsDead: false,
-// 		},
-// {
-// 	URL:    "http://localhost:8082/",
-// 	IsDead: false,
-// },
-// {
-// 	URL:    "http://localhost:8083/",
-// 	IsDead: false,
-// },
-// {
-// 	URL:    "http://localhost:8086/",
-// 	IsDead: false,
-// },
-// {
-// 	URL:    "http://localhost:8087/",
-// 	IsDead: false,
-// },
-// {
-// 	URL:    "http://localhost:8088/",
-// 	IsDead: false,
-// },
-// {
-// 	URL:    "http://localhost:8089/",
-// 	IsDead: false,
-// },
-// 	}
-// }
