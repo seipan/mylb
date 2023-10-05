@@ -22,7 +22,7 @@ func (s *lcserverPool) GetNextValidPeer() backend.Backend {
 	}
 
 	for _, b := range s.Backends {
-		if !b.GetIsDead() {
+		if b.GetIsDead() {
 			continue
 		}
 		if leastConnectedPeer.GetConnections() > b.GetConnections() {

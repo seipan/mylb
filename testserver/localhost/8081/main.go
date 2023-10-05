@@ -1,6 +1,10 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"time"
+
+	"github.com/gin-gonic/gin"
+)
 
 func main() {
 	router := gin.Default()
@@ -10,6 +14,7 @@ func main() {
 		})
 	})
 	router.GET("/", func(c *gin.Context) {
+		time.Sleep(4 * time.Second)
 		c.JSON(200, gin.H{
 			"message": "ok",
 		})

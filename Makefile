@@ -8,5 +8,5 @@ ts-down:
 	cd testserver && make down
 
 .PHONY: run
-up:
+run:
 	go run .
