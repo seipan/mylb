@@ -1,4 +1,3 @@
-DOCKER_COMPOSE_LOCAL_SERVER     := docker-compose.yml
 
 .PHONY: ts-re
 ts-re: 
@@ -8,18 +7,6 @@ ts-re:
 ts-down: 
 	cd testserver && make down
 
-.PHONY: up
+.PHONY: run
 up:
-	docker-compose \
-	-f $(DOCKER_COMPOSE_LOCAL_SERVER) up -d
-
-
-.PHONY: down
-down:
-	docker-compose \
-	-f $(DOCKER_COMPOSE_LOCAL_SERVER) down \
-	--rmi all --volumes --remove-orphans
-
-
-.PHONY: re
-re:down up
+	go run .

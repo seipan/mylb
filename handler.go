@@ -4,6 +4,8 @@ import (
 	"net/http"
 
 	"github.com/seipan/mylb/serverpool"
+	"github.com/seipan/mylb/utils"
+	"go.uber.org/zap"
 )
 
 type LBHandler interface {
@@ -17,6 +19,10 @@ type lbHandler struct {
 func (lb *lbHandler) Serve(w http.ResponseWriter, r *http.Request) {
 	peer := lb.serverPool.GetNextValidPeer()
 	if peer != nil {
+		utils.Info("access to endpoint",
+			zap.String("url", peer.GetURL()),
+			zap.Int("connections", peer.GetConnections()),
+		)
 		peer.Serve(w, r)
 		return
 	}
