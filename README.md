@@ -42,7 +42,59 @@ http://localhost:8087
 http://localhost:8088
 http://localhost:8089
 ```
-If you access these endpoints, you will be redirected to /health.
+The responses from these APIs are as follows:
+```
+{
+	"message": "ok",
+}
+```
+Among these, 8081 and 8082 are set to wait 4 seconds before responding. This represents servers with slow responses.
+```go
+router.GET("/", func(c *gin.Context) {
+		time.Sleep(4 * time.Second)
+		c.JSON(200, gin.H{
+			"message": "ok",
+		})
+	})
+```
+
+### loadbalancer
+There are two types of load balancers in this repository, representing different algorithms.
+Specifically, there are two types: lc (Least Connections) and lr (Least Response Time).The two types can be changed by modifying the config.json.
+
+```json:config.json
+{
+    "type": "lr"
+}
+```
+To launch the load balancer, enter the following command. (Don't forget to start the test server beforehand.)
+```
+make run
+```
+### Results
+Let's take a look at the actual execution results from here.
+First, let's take a look at the results for Least Connections.
+```
+make run
+{"level":"info","msg":"access to endpoint","url":"http://localhost:8081/","connections":0}
+{"level":"info","msg":"access to endpoint","url":"http://localhost:8081/","connections":0}
+{"level":"info","msg":"access to endpoint","url":"http://localhost:8082/","connections":0}
+{"level":"info","msg":"access to endpoint","url":"http://localhost:8083/","connections":0}
+{"level":"info","msg":"access to endpoint","url":"http://localhost:8083/","connections":0}
+{"level":"info","msg":"access to endpoint","url":"http://localhost:8081/","connections":0}
+```
+I think you can see that the server is actually being changed so that the connections become 0.
+
+
+Next, let's take a look at the results for Least Response Time.
+```
+make run
+{"level":"info","msg":"access to endpoint","url":"http://localhost:8085/","connections":0}
+{"level":"info","msg":"access to endpoint","url":"http://localhost:8085/","connections":0}
+{"level":"info","msg":"access to endpoint","url":"http://localhost:8085/","connections":0}
+{"level":"info","msg":"access to endpoint","url":"http://localhost:8085/","connections":0}
+```
+Now, as explained earlier, you can see that there is no access to 8081 and 8082, which have slower responses.
 
 ## Reference
  [Golangでロードバランサーを実装する](https://bmf-tech.com/posts/Golang%E3%81%A7%E3%83%AD%E3%83%BC%E3%83%89%E3%83%90%E3%83%A9%E3%83%B3%E3%82%B5%E3%83%BC%E3%82%92%E5%AE%9F%E8%A3%85%E3%81%99%E3%82%8B)
