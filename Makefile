@@ -9,4 +9,4 @@ ts-down:
 
 .PHONY: run
 run:
-	go run .
+	go run . &
